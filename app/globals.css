@@ -1,0 +1,312 @@
+@import "tailwindcss";
+
+/* ============================================================
+   1. COLOR TOKENS (dark is default, light follows the OS)
+   ============================================================ */
+:root {
+  --bg: #04060b;
+  --bg2: #0a1018;
+  --tx: #e9f6ff;
+  --mu: #8aa3b5;
+  --cy: #4de1ff;
+  --or: #ff7a1a;
+  --ln: rgba(120, 200, 255, 0.16);
+  --pn: rgba(10, 16, 24, 0.72);
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #eef3f7;
+    --bg2: #fff;
+    --tx: #0a1420;
+    --mu: #53687a;
+    --cy: #0788ab;
+    --or: #e5600a;
+    --ln: rgba(10, 40, 70, 0.18);
+    --pn: rgba(255, 255, 255, 0.8);
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #04060b;
+  --bg2: #0a1018;
+  --tx: #e9f6ff;
+  --mu: #8aa3b5;
+  --cy: #4de1ff;
+  --or: #ff7a1a;
+  --ln: rgba(120, 200, 255, 0.16);
+  --pn: rgba(10, 16, 24, 0.72);
+}
+
+/* ============================================================
+   2. TAILWIND THEME: gives you bg-bg, text-cy, border-ln, font-display...
+   ============================================================ */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg2: var(--bg2);
+  --color-tx: var(--tx);
+  --color-mu: var(--mu);
+  --color-cy: var(--cy);
+  --color-or: var(--or);
+  --color-ln: var(--ln);
+  --color-pn: var(--pn);
+
+  --font-display: var(--font-unbounded), system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, Menlo, monospace;
+}
+
+/* ============================================================
+   3. BASE (resets from your original design)
+   ============================================================ */
+@layer base {
+  :root {
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  html {
+    height: 100%;
+    scroll-behavior: smooth;
+    line-height: normal; /* Tailwind sets 1.5, your design uses the browser default */
+  }
+  body {
+    background: var(--bg);
+    color: var(--tx);
+    font-family: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, Menlo, monospace;
+    font-size: 14px;
+    overflow-x: hidden;
+    min-height: 100%;
+  }
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+  svg {
+    display: inline; /* Tailwind makes svg block, your design had it inline */
+    vertical-align: baseline;
+  }
+  @media (pointer: fine) {
+    body, a, button, input {
+      cursor: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation: none !important;
+      transition: none !important;
+    }
+    .rv {
+      opacity: 1;
+      transform: none;
+    }
+    .cv path {
+      stroke-dashoffset: 0;
+    }
+  }
+}
+
+/* ============================================================
+   4. KEYFRAMES
+   ============================================================ */
+@keyframes rot { to { transform: translate(-50%, -50%) rotate(405deg); } }
+@keyframes pl { 0% { box-shadow: 0 0 0 0 var(--or); } 70%, 100% { box-shadow: 0 0 0 9px transparent; } }
+@keyframes mq { to { transform: translateX(-50%); } }
+@keyframes rot2 { to { transform: rotate(360deg); } }
+@keyframes fw { to { stroke-dashoffset: -9; } }
+@keyframes bk { 50% { opacity: 0.15; } }
+@keyframes wd { 50% { transform: scaleX(0.4); } }
+@keyframes dw { to { stroke-dashoffset: 0; } }
+
+/* ============================================================
+   5. COMPONENT CLASSES (effects Tailwind can't express cleanly)
+   ============================================================ */
+@layer components {
+  /* wrapper used by every section */
+  .wrap { max-width: 1220px; margin: 0 auto; padding: 0 28px; }
+
+  /* ---- custom cursor ---- */
+  .cur-ring {
+    position: fixed; left: 0; top: 0; z-index: 99; pointer-events: none;
+    width: 26px; height: 26px; border: 1px solid var(--cy);
+    transform: translate(-50%, -50%) rotate(45deg);
+    transition: width 0.25s, height 0.25s, background 0.25s;
+    animation: rot 8s linear infinite;
+  }
+  .cur-ring.hov {
+    width: 54px; height: 54px;
+    background: color-mix(in srgb, var(--cy) 18%, transparent);
+  }
+  .cur-dot {
+    position: fixed; left: 0; top: 0; z-index: 99; pointer-events: none;
+    width: 4px; height: 4px; background: var(--or);
+    transform: translate(-50%, -50%);
+  }
+  .cur-label {
+    position: fixed; z-index: 99; pointer-events: none; font-size: 10px;
+    color: var(--cy); letter-spacing: 0.12em; margin: 18px 0 0 22px; left: 0; top: 0;
+  }
+  @media (pointer: coarse) {
+    .cur-ring, .cur-dot, .cur-label { display: none; }
+  }
+
+  /* ---- header chip ---- */
+  .pulse-dot {
+    width: 7px; height: 7px; border-radius: 50%; background: var(--or);
+    animation: pl 1.8s infinite;
+  }
+
+  /* ---- hero ---- */
+  .hero {
+    --tx: #e9f6ff; --mu: #8aa3b5; --ln: rgba(120, 200, 255, 0.18);
+    color: var(--tx); position: relative; height: 100vh; min-height: 680px; overflow: hidden;
+    background: radial-gradient(900px 600px at 72% 45%, #0b2236 0%, #04060b 70%);
+  }
+  .hero::before {
+    content: ""; position: absolute; inset: 0;
+    background-image: linear-gradient(var(--ln) 1px, transparent 1px), linear-gradient(90deg, var(--ln) 1px, transparent 1px);
+    background-size: 64px 64px;
+    -webkit-mask-image: radial-gradient(ellipse at 70% 50%, #000 10%, transparent 70%);
+    mask-image: radial-gradient(ellipse at 70% 50%, #000 10%, transparent 70%);
+    opacity: 0.7;
+  }
+  .hero-fb {
+    display: none; position: absolute; right: 8%; top: 14%; height: 70%; opacity: 0.8;
+    mask-image: linear-gradient(#000 60%, transparent);
+  }
+  .nofx .hero-fb { display: block; }
+  .nm-em {
+    font-style: normal; color: var(--cy);
+    text-shadow: 0 0 30px color-mix(in srgb, var(--cy) 50%, transparent);
+  }
+  .btn {
+    border: 1px solid var(--ln); padding: 14px 22px; display: inline-block; position: relative;
+    transition: 0.3s; font-size: 13px; background: rgba(4, 12, 20, 0.55); color: inherit;
+    backdrop-filter: blur(6px);
+  }
+  .btn:hover {
+    border-color: var(--cy);
+    box-shadow: 0 0 30px color-mix(in srgb, var(--cy) 30%, transparent);
+  }
+  .btn-p { background: var(--cy); color: #02121a; border-color: var(--cy); font-weight: 500; }
+  .tel b { color: var(--cy); font-weight: 500; }
+  .br { position: absolute; width: 22px; height: 22px; border: 1px solid var(--cy); z-index: 3; }
+  .br-tl { top: 70px; left: 24px; border-right: 0; border-bottom: 0; }
+  .br-tr { top: 70px; right: 24px; border-left: 0; border-bottom: 0; }
+  .br-bl { bottom: 56px; left: 24px; border-right: 0; border-top: 0; }
+  .br-br { bottom: 56px; right: 24px; border-left: 0; border-top: 0; }
+
+  /* ---- ticker ---- */
+  .marquee { display: inline-block; animation: mq 40s linear infinite; }
+  .marquee em { font-style: normal; color: var(--or); padding: 0 18px; }
+
+  /* ---- section label + title ---- */
+  .lb { color: var(--cy); font-size: 12px; margin-bottom: 14px; display: flex; gap: 12px; align-items: center; }
+  .lb::before { content: ""; width: 28px; height: 1px; background: var(--cy); }
+  .sec-title {
+    font-size: clamp(26px, 3.8vw, 50px); line-height: 1.08; font-weight: 700;
+    letter-spacing: -0.03em; margin-bottom: 40px; max-width: 18ch;
+  }
+
+  /* ---- modules ---- */
+  .mod {
+    background: var(--pn); border: 1px solid var(--ln); padding: 22px; position: relative;
+    overflow: hidden; transition: border-color 0.3s, transform 0.3s; transform-style: preserve-3d;
+  }
+  .mod::before {
+    content: ""; position: absolute; inset: 0;
+    background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 0), color-mix(in srgb, var(--cy) 22%, transparent), transparent 70%);
+    opacity: 0; transition: 0.3s; pointer-events: none;
+  }
+  .mod:hover { border-color: var(--cy); }
+  .mod:hover::before { opacity: 1; }
+  .mod small { color: var(--or); font-size: 11px; }
+  .mod h3 { font-size: 19px; margin: 8px 0 6px; font-weight: 700; }
+  .mod p { color: var(--mu); font-size: 12px; line-height: 1.75; min-height: 84px; }
+  .mod svg { width: 100%; height: 96px; margin: 14px 0; stroke: var(--cy); fill: none; stroke-width: 1.5; overflow: visible; }
+  .rg { transform-box: fill-box; transform-origin: center; animation: rot2 9s linear infinite; }
+  .rg.r { animation-direction: reverse; }
+  .fl { stroke: var(--or) !important; stroke-dasharray: 4 5; animation: fw 1s linear infinite; }
+  .bl { animation: bk 2.4s ease-in-out infinite; fill: var(--cy) !important; stroke: none !important; }
+  .wd { animation: wd 3s ease-in-out infinite; transform-origin: left; transform-box: fill-box; }
+
+  /* ---- deployments ---- */
+  .dep-btn {
+    text-align: left; background: var(--pn); border: 1px solid var(--ln); color: var(--tx);
+    padding: 16px 18px; font: inherit; transition: 0.3s;
+  }
+  .dep-btn small { color: var(--or); display: block; margin-bottom: 5px; font-size: 11px; }
+  .dep-btn b { font-weight: 500; font-size: 14px; line-height: 1.35; }
+  .dep-btn:hover, .dep-btn.on {
+    border-color: var(--cy);
+    background: color-mix(in srgb, var(--cy) 10%, var(--pn));
+  }
+  .dep-view { background: var(--pn); border: 1px solid var(--ln); padding: 26px; min-height: 470px; position: relative; }
+  .dep-view h3 { font-size: clamp(20px, 2.5vw, 30px); margin: 6px 0 10px; font-weight: 700; line-height: 1.15; }
+  .dep-view > p { color: var(--mu); line-height: 1.8; max-width: 60ch; }
+  .dep-view svg { width: 100%; height: 210px; margin: 18px 0 6px; }
+  .nd rect { fill: var(--bg2); stroke: var(--cy); stroke-width: 1.2; }
+  .nd text { fill: var(--tx); font-size: 11px; font-family: inherit; text-anchor: middle; }
+  .ed { stroke: var(--or); stroke-width: 1.4; stroke-dasharray: 5 5; animation: fw 1s linear infinite; fill: none; }
+  .dep-log { font-size: 12px; color: var(--mu); line-height: 1.9; min-height: 76px; white-space: pre-wrap; }
+  .dep-log b { color: var(--cy); font-weight: 500; }
+  .dep-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+  .dep-tags span { border: 1px solid var(--ln); padding: 4px 10px; font-size: 11px; color: var(--cy); }
+
+  /* ---- ask ai ---- */
+  .msg { margin-bottom: 14px; }
+  .msg.u { color: var(--or); }
+  .msg.u::before { content: "you › "; }
+  .msg.a::before { content: "ai › "; color: var(--cy); }
+  .cr { display: inline-block; width: 7px; height: 13px; background: var(--cy); vertical-align: -2px; animation: bk 1s steps(1) infinite; }
+  .chat-chip {
+    background: none; border: 1px solid var(--ln); color: var(--cy); font: inherit;
+    font-size: 11px; padding: 6px 10px; transition: 0.25s;
+  }
+  .chat-chip:hover {
+    border-color: var(--cy);
+    background: color-mix(in srgb, var(--cy) 10%, transparent);
+  }
+
+  /* ---- training log ---- */
+  .cv svg { width: 100%; height: auto; border: 1px solid var(--ln); background: var(--pn); }
+  .cv path { fill: none; stroke: var(--cy); stroke-width: 2; stroke-dasharray: 900; stroke-dashoffset: 900; }
+  .cv.in path { animation: dw 2.6s ease forwards; }
+  .cv text { fill: var(--mu); font-size: 10px; font-family: inherit; }
+  .ep { border-left: 1px solid var(--ln); padding: 0 0 28px 24px; position: relative; opacity: 0.3; transition: opacity 0.5s; }
+  .ep.on { opacity: 1; }
+  .ep::before { content: ""; position: absolute; left: -5px; top: 4px; width: 9px; height: 9px; background: var(--bg); border: 1px solid var(--or); }
+  .ep small { color: var(--or); }
+  .ep h4 { font-size: 19px; margin: 6px 0; font-weight: 700; }
+  .ep p { color: var(--mu); line-height: 1.75; font-size: 13px; max-width: 50ch; }
+
+  /* ---- contact ---- */
+  .cta-big {
+    font-size: clamp(34px, 7.4vw, 110px); font-weight: 700; line-height: 1; letter-spacing: -0.04em;
+    margin-bottom: 46px; background: linear-gradient(100deg, var(--tx), var(--cy));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .fld {
+    width: 100%; background: var(--pn); border: 1px solid var(--ln); color: var(--tx);
+    padding: 14px; margin-bottom: 12px; font: inherit; transition: 0.25s;
+  }
+  .fld:focus {
+    outline: none; border-color: var(--cy);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--cy) 20%, transparent);
+  }
+
+  /* ---- toast ---- */
+  .toast {
+    position: fixed; bottom: calc(22px + env(safe-area-inset-bottom, 0px)); left: 50%;
+    transform: translate(-50%, 40px); background: var(--cy); color: #02121a;
+    padding: 11px 18px; opacity: 0; transition: 0.4s; z-index: 80;
+  }
+  .toast.on { opacity: 1; transform: translate(-50%, 0); }
+
+  /* ---- scroll reveal ---- */
+  .rv { opacity: 0; transform: translateY(30px); transition: opacity 0.9s, transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1); }
+  .rv.in { opacity: 1; transform: none; }
+
+  /* ---- small-screen tweaks for custom classes ---- */
+  @media (max-width: 560px) {
+    .hero::before { opacity: 0.35; }
+    .tel span:nth-child(n + 3) { display: none; }
+  }
+}
