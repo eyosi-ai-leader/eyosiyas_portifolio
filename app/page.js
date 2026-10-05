@@ -1,46 +1,35 @@
 import Cursor from "@/components/Cursor";
 import ScrollProgress from "@/components/ScrollProgress";
-import Reveal from "@/components/Reveal";
+import Header from "@/components/Header";
+import Hero from "@/components/Hero";
+import Ticker from "@/components/Ticker";
 
 export default function Home() {
   return (
     <>
       <ScrollProgress />
       <Cursor />
+      <Header />
 
       <main>
-        <section className="grid min-h-screen place-items-center">
-          <div className="text-center">
-            <p className="lb justify-center">TEST PAGE</p>
-            <h1 className="font-display text-4xl font-bold text-cy">
-              Steps 3 to 6 check
-            </h1>
-            <p className="mt-4 text-mu">
-              Move your mouse, then scroll down.{" "}
-              <a href="#next" className="text-or" data-cur="OPEN">
-                hover me
-              </a>
-            </p>
-            <p className="mt-2 text-xs text-mu">
-              cursor: <span id="cx">0000, 0000</span>
-            </p>
-          </div>
-        </section>
+        <Hero />
+        <Ticker />
 
-        <section id="next" className="min-h-screen pt-24">
-          <div className="wrap">
-            <p className="lb">TEST SECTION</p>
-            <Reveal as="h2" scramble className="font-display sec-title">
-              Four systems, one engineer
-            </Reveal>
-            <Reveal as="p" className="mb-8 text-mu">
-              I fade in when you scroll to me.
-            </Reveal>
-            <button className="dep-btn" data-cur="LOAD">
-              <small>DEP-01</small>
-              <b>Hover this button</b>
-            </button>
-          </div>
+        {/* TEMPORARY placeholders so the nav links work. We replace each one in the next steps. */}
+        <section id="modules" className="min-h-screen pt-[100px]">
+          <div className="wrap"><p className="lb">modules</p></div>
+        </section>
+        <section id="work" className="min-h-screen pt-[100px]">
+          <div className="wrap"><p className="lb">deployments</p></div>
+        </section>
+        <section id="ask" className="min-h-screen pt-[100px]">
+          <div className="wrap"><p className="lb">ask ai</p></div>
+        </section>
+        <section id="log" className="min-h-screen pt-[100px]">
+          <div className="wrap"><p className="lb">training log</p></div>
+        </section>
+        <section id="contact" className="min-h-screen pt-[100px]">
+          <div className="wrap"><p className="lb">contact</p></div>
         </section>
       </main>
     </>
