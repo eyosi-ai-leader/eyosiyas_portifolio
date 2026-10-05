@@ -3,6 +3,8 @@ import ScrollProgress from "@/components/ScrollProgress";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import Ticker from "@/components/Ticker";
+import Modules from "@/components/Modules";
+import Deployments from "@/components/Deployments";
 
 export default function Home() {
   return (
@@ -14,14 +16,10 @@ export default function Home() {
       <main>
         <Hero />
         <Ticker />
+        <Modules />
+        <Deployments />
 
-        {/* TEMPORARY placeholders so the nav links work. We replace each one in the next steps. */}
-        <section id="modules" className="min-h-screen pt-[100px]">
-          <div className="wrap"><p className="lb">modules</p></div>
-        </section>
-        <section id="work" className="min-h-screen pt-[100px]">
-          <div className="wrap"><p className="lb">deployments</p></div>
-        </section>
+        {/* TEMPORARY placeholders. We replace each one in the next steps. */}
         <section id="ask" className="min-h-screen pt-[100px]">
           <div className="wrap"><p className="lb">ask ai</p></div>
         </section>
