@@ -1,16 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
 const LINKS = [
   { href: "#home", label: "system" },
   { href: "#modules", label: "modules" },
   { href: "#work", label: "deployments" },
   { href: "#ask", label: "ask ai" },
   { href: "#log", label: "training log" },
+  { href: "#certs", label: "certificates" },
+  { href: "#cv", label: "cv" },
   { href: "#contact", label: "contact" },
 ];
-
 export default function Header() {
   const [active, setActive] = useState("home");
 
