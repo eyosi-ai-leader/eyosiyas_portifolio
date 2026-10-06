@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { useScramble } from "@/hooks/useScramble";
+import PortraitCanvas from "@/components/PortraitCanvas";
 
 const NAME = "Eyosiyas Hailemichael";
 const ROLES = [
@@ -49,9 +50,9 @@ export default function Hero() {
   }, []);
 
   return (
-    // "nofx" shows the plain portrait. Remove it in Step 16 when three.js is added.
-    <section id="home" className="hero nofx">
-      {/* Step 16: <PortraitCanvas /> goes here */}
+    <section id="home" className="hero">
+
+           <PortraitCanvas />
 
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img className="hero-fb" src="/portrait.jpg" alt="Eyosiyas Hailemichael" />

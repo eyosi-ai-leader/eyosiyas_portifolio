@@ -5,6 +5,10 @@ import Hero from "@/components/Hero";
 import Ticker from "@/components/Ticker";
 import Modules from "@/components/Modules";
 import Deployments from "@/components/Deployments";
+import AskAI from "@/components/AskAI";
+import TrainingLog from "@/components/TrainingLog";
+import Contact from "@/components/Contact";
+import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
@@ -18,18 +22,12 @@ export default function Home() {
         <Ticker />
         <Modules />
         <Deployments />
-
-        {/* TEMPORARY placeholders. We replace each one in the next steps. */}
-        <section id="ask" className="min-h-screen pt-[100px]">
-          <div className="wrap"><p className="lb">ask ai</p></div>
-        </section>
-        <section id="log" className="min-h-screen pt-[100px]">
-          <div className="wrap"><p className="lb">training log</p></div>
-        </section>
-        <section id="contact" className="min-h-screen pt-[100px]">
-          <div className="wrap"><p className="lb">contact</p></div>
-        </section>
+        <AskAI />
+        <TrainingLog />
+        <Contact />
       </main>
+
+      <Footer />
     </>
   );
 }
