@@ -9,6 +9,8 @@ import AskAI from "@/components/AskAI";
 import TrainingLog from "@/components/TrainingLog";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
+import Certificates from "@/components/Certificates";
+import CvDownload from "@/components/CvDownload";
 
 export default function Home() {
   return (
@@ -17,13 +19,15 @@ export default function Home() {
       <Cursor />
       <Header />
 
-      <main>
+            <main>
         <Hero />
         <Ticker />
         <Modules />
         <Deployments />
         <AskAI />
         <TrainingLog />
+        <Certificates />
+        <CvDownload />
         <Contact />
       </main>
 

@@ -1,10 +1,16 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import {
+  FaEnvelope,
+  FaGithub,
+  FaLinkedinIn,
+  FaPhoneAlt,
+  FaTelegramPlane,
+} from "react-icons/fa";
 import Reveal from "@/components/Reveal";
 import Toast from "@/components/Toast";
-
-const EMAIL = "eyosi4314@gmail.com";
+import { contact } from "@/data/contact";
 
 export default function Contact() {
   const [copied, setCopied] = useState(false);
@@ -15,11 +21,53 @@ export default function Contact() {
   // clicking the email copies it and shows "Email copied" for 1.8 seconds
   function copyEmail(e) {
     e.preventDefault();
-    navigator.clipboard?.writeText(EMAIL).catch(() => {});
+    navigator.clipboard?.writeText(contact.email).catch(() => {});
     setCopied(true);
     clearTimeout(timer.current);
     timer.current = setTimeout(() => setCopied(false), 1800);
   }
+
+  const links = [
+    {
+      label: "email",
+      value: contact.email,
+      href: "#",
+      Icon: FaEnvelope,
+      cur: "COPY",
+      onClick: copyEmail,
+    },
+    {
+      label: "phone",
+      value: contact.phoneDisplay,
+      href: `tel:${contact.phone}`,
+      Icon: FaPhoneAlt,
+      cur: "CALL",
+    },
+    {
+      label: "telegram",
+      value: `@${contact.telegram}`,
+      href: `https://t.me/${contact.telegram}`,
+      Icon: FaTelegramPlane,
+      cur: "CHAT",
+      external: true,
+    },
+    {
+      label: "github",
+      value: `github.com/${contact.github}`,
+      href: `https://github.com/${contact.github}`,
+      Icon: FaGithub,
+      cur: "OPEN",
+      external: true,
+    },
+    {
+      label: "linkedin",
+      value: contact.linkedin.replace(/^https?:\/\/(www\.)?/, ""),
+      href: contact.linkedin,
+      Icon: FaLinkedinIn,
+      cur: "OPEN",
+      external: true,
+    },
+  ];
 
   return (
     <>
@@ -31,21 +79,35 @@ export default function Contact() {
           </Reveal>
 
           <Reveal className="grid grid-cols-2 gap-[30px] max-[980px]:grid-cols-1">
-            <div className="leading-[2.2] text-mu">
-              Open to projects, collaborations, and full-time roles.
-              <br />
-              <a
-                href="#"
-                data-cur="COPY"
-                onClick={copyEmail}
-                className="border-b border-cy text-cy"
-              >
-                {EMAIL}
-              </a>
-              <br />
-              github.com/eyosi4314
-              <br />
-              Ethiopia · replies within 24 hours
+            <div>
+              <p className="mb-[18px] leading-[1.8] text-mu">
+                Open to projects, collaborations, and full-time roles.
+              </p>
+
+              <div className="flex flex-col gap-[10px]">
+                {links.map(({ label, value, href, Icon, cur, onClick, external }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    onClick={onClick}
+                    data-cur={cur}
+                    {...(external ? { target: "_blank", rel: "noreferrer" } : {})}
+                    className="dep-btn flex items-center gap-[14px]"
+                  >
+                    <span className="grid h-9 w-9 shrink-0 place-items-center border border-ln text-[15px] text-cy">
+                      <Icon />
+                    </span>
+                    <span className="min-w-0">
+                      <small>{label}</small>
+                      <b className="break-all">{value}</b>
+                    </span>
+                  </a>
+                ))}
+              </div>
+
+              <p className="mt-[14px] text-[12px] text-mu">
+                Ethiopia · replies within 24 hours. Your information will never be shared.
+              </p>
             </div>
 
             <div>
@@ -59,7 +121,7 @@ export default function Contact() {
               <a
                 className="btn border-cy bg-cy text-[#02121a]"
                 data-cur="SEND"
-                href={`mailto:${EMAIL}`}
+                href={`mailto:${contact.email}`}
               >
                 Send message
               </a>
