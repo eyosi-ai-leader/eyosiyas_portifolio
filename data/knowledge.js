@@ -38,7 +38,7 @@ export const knowledge = [
   {
     pattern: /who|you|about|do|build|what/,
     answer:
-      "I'm Eyosiyas, an AI-native software engineer. I build full-stack products with clean interfaces, solid APIs, reliable databases, and AI inside.",
+            "I'm Eyosiyas, a software developer. I build full-stack products with clean interfaces, solid APIs, reliable databases, and AI inside.",
   },
 ];
 

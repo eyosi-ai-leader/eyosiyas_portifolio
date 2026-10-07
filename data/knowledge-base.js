@@ -5,7 +5,7 @@
 export const knowledgeBase = `
 ## IDENTITY
 - Full name: Eyosiyas Hailemichael Tesema (known publicly as Eyosiyas Hailemichael)
-- Roles: Information Systems graduate, Full-Stack Web Developer, software engineer, technology leader
+- Roles: Information Systems graduate, Software Developer, Full-Stack Web Developer , Database Architect, AI-Assisted Software Engineer, Technology Leader
 - Based in: Addis Ababa, Ethiopia
 - Languages: Amharic (native), English (professional), Afaan Oromo (basic)
 - Professional focus: Full-stack web development, AI-assisted software systems, digital solutions, and technology leadership
