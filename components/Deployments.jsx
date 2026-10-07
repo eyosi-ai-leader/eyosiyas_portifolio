@@ -47,7 +47,9 @@ function ProjectView({ project }) {
 
   return (
     <>
-      <small className="text-[11.67px] text-or">{project.id} · status: running</small>
+      <small className="text-[11.67px] text-or">
+        {project.id} · status: {project.status}
+      </small>
       <h3 className="font-display">{project.title}</h3>
       <p>{project.description}</p>
 
@@ -67,6 +69,19 @@ function ProjectView({ project }) {
           <span key={tag}>{tag}</span>
         ))}
       </div>
+
+      {/* the button only appears for projects that have a live url */}
+      {project.url && (
+        <a
+          className="btn btn-p mt-[18px]"
+          data-cur="VISIT"
+          href={project.url}
+          target="_blank"
+          rel="noreferrer"
+        >
+          Visit live site ↗
+        </a>
+      )}
     </>
   );
 }
@@ -96,7 +111,10 @@ export default function Deployments() {
                 onClick={() => setSelected(i)}
                 onMouseEnter={() => setSelected(i)}
               >
-                <small>{p.id}</small>
+                <small>
+                  {p.id}
+                  {p.url ? " · live" : ""}
+                </small>
                 <b>{p.title}</b>
               </button>
             ))}
