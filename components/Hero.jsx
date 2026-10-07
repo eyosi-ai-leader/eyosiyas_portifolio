@@ -6,7 +6,7 @@ import PortraitCanvas from "@/components/PortraitCanvas";
 
 const NAME = "Eyosiyas Hailemichael";
 const ROLES = [
-  "AI-native software engineer",
+  "Software Developer",
   "full-stack developer",
   "database architect",
   "agent builder",
@@ -64,7 +64,7 @@ export default function Hero() {
 
       <div className="wrap relative z-[2] flex h-full flex-col justify-center pt-[60px]">
         <div className="inline-flex w-max items-center gap-[10px] border border-ln bg-[rgba(4,12,20,0.6)] px-3 py-[7px] text-[11px] text-cy backdrop-blur-[6px]">
-          <span>●</span>SYSTEM ONLINE · AI-NATIVE SOFTWARE ENGINEER
+          <span>●</span>SYSTEM ONLINE · SOFTWARE DEVELOPER
         </div>
 
         <h1

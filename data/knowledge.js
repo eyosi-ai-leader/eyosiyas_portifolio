@@ -42,16 +42,19 @@ export const knowledge = [
   },
 ];
 
+
+
 export const fallbackAnswer =
   "I can answer questions about my skills, projects, education, languages, and availability. Try one of the buttons below.";
 
 export const greeting =
-  "Hi. I answer questions about Eyosiyas using his CV. Ask me anything.";
+  "Hi, I'm Eyosiyas's AI assistant. Ask me about his work, projects, background, vision, or how to hire him.";
 
 export const suggestionChips = [
   "What do you build?",
+  "His story",
+  "Vision & goals",
   "Tech stack",
-  "Education",
   "Are you available?",
   "Contact",
 ];

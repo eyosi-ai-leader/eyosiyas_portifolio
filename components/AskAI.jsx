@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Reveal from "@/components/Reveal";
+
 import {
   knowledge,
   fallbackAnswer,
@@ -9,9 +10,11 @@ import {
   suggestionChips,
 } from "@/data/knowledge";
 
-// five mouth bars with random heights, used while the AI is "speaking"
-const randomBars = () => [0, 1, 2, 3, 4].map(() => 6 + Math.random() * 14);
+// five mouth bars with random heights
+const randomBars = () =>
+  [0, 1, 2, 3, 4].map(() => 6 + Math.random() * 14);
 
+/* ---------- Robot face ---------- */
 /* ---------- the robot face: eyes follow the mouse, blinks, talking mouth ---------- */
 
 function RobotFace({ bars }) {
@@ -71,12 +74,16 @@ function RobotFace({ bars }) {
         strokeWidth="1.5"
         className="w-[min(320px,100%)]"
       >
+        {/* antenna */}
         <path d="M120 10V34" />
         <circle cx="120" cy="8" r="5" fill="var(--or)" stroke="none" />
+
+        {/* head and side ears */}
         <rect x="22" y="34" width="196" height="150" rx="34" fill="var(--bg2)" />
         <rect x="8" y="86" width="12" height="44" rx="5" />
         <rect x="220" y="86" width="12" height="44" rx="5" />
 
+        {/* eyes */}
         <g className="eye">
           <rect className="lid" style={lid} x="52" y="68" width="50" height="50" rx="14" />
           <circle className="pp" style={pupil} cx="77" cy="93" r="13" fill="var(--cy)" stroke="none" />
@@ -100,13 +107,59 @@ function RobotFace({ bars }) {
     </div>
   );
 }
+/* ---------- talk to the server route (/api/chat) ---------- */
+
+// Sends the conversation, reads the answer as it streams in,
+// and calls onText with the text received so far.
+async function askServer(history, onText) {
+  const res = await fetch("/api/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      messages: history.map((m) => ({
+        role: m.role === "u" ? "user" : "assistant",
+        content: m.text,
+      })),
+    }),
+  });
+
+  if (!res.ok || !res.body) {
+    throw new Error("chat request failed");
+  }
+
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  let text = "";
+
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+
+      if (done) break;
+
+      text += decoder.decode(value, { stream: true });
+      onText(text);
+    }
+  } catch (err) {
+    if (!text) throw err;
+  }
+
+  if (!text.trim()) {
+    throw new Error("empty answer");
+  }
+
+  return text;
+}
 
 /* ---------- the whole section ---------- */
 
 export default function AskAI() {
-  const [messages, setMessages] = useState([{ role: "a", text: greeting }]);
-  const [pending, setPending] = useState(null); // answer being typed, or null
-  const [bars, setBars] = useState(null); // mouth shape
+  const [messages, setMessages] = useState([
+    { role: "a", text: greeting },
+  ]);
+
+  const [pending, setPending] = useState(null);
+  const [bars, setBars] = useState(null);
   const [value, setValue] = useState("");
 
   const busy = useRef(false);
@@ -114,63 +167,105 @@ export default function AskAI() {
   const msgsRef = useRef(null);
   const inputRef = useRef(null);
 
-  // ask a question: show it, wait 450ms, then type the answer 2 letters every 16ms
-  function say(question) {
-    if (busy.current || !question.trim()) return;
-    busy.current = true;
+  function finish(answer) {
+    setMessages((m) => [...m, { role: "a", text: answer }]);
+    setPending(null);
+    setBars(null);
+    busy.current = false;
+  }
 
-    setMessages((m) => [...m, { role: "u", text: question }]);
-    setPending("");
+  function answerLocally(question) {
+    const hit = knowledge.find((k) =>
+      k.pattern.test(question.toLowerCase())
+    );
 
-    const hit = knowledge.find((k) => k.pattern.test(question.toLowerCase()));
     const answer = hit ? hit.answer : fallbackAnswer;
 
     let i = 0;
+
     timer.current = setTimeout(function step() {
       i += 2;
+
       setPending(answer.slice(0, i));
       setBars(randomBars());
 
       if (i < answer.length) {
         timer.current = setTimeout(step, 16);
       } else {
-        setMessages((m) => [...m, { role: "a", text: answer }]);
-        setPending(null);
-        setBars(null);
-        busy.current = false;
+        finish(answer);
       }
     }, 450);
   }
 
+  async function say(question) {
+    const q = question.trim().slice(0, 500);
+
+    if (busy.current || !q) return;
+
+    busy.current = true;
+
+    const history = [...messages, { role: "u", text: q }];
+
+    setMessages(history);
+    setPending("");
+
+    try {
+      const answer = await askServer(history, (text) => {
+        setPending(text);
+        setBars(randomBars());
+      });
+
+      finish(answer);
+    } catch {
+      answerLocally(q);
+    }
+  }
+
   function onSubmit(e) {
     e.preventDefault();
+
     say(value);
     setValue("");
   }
 
-  // keep the newest message in view
   useEffect(() => {
     const el = msgsRef.current;
-    if (el) el.scrollTop = el.scrollHeight;
+
+    if (el) {
+      el.scrollTop = el.scrollHeight;
+    }
   }, [messages, pending]);
 
-  // stop timers if the component is removed
-  useEffect(() => () => clearTimeout(timer.current), []);
+  useEffect(() => {
+    return () => clearTimeout(timer.current);
+  }, []);
 
-  // press "/" anywhere to jump to the chat and focus the input
   useEffect(() => {
     let focusTimer;
+
     function onKey(e) {
-      if (e.key === "/" && !/INPUT|TEXTAREA/.test(document.activeElement.tagName)) {
+      if (
+        e.key === "/" &&
+        !/INPUT|TEXTAREA/.test(document.activeElement.tagName)
+      ) {
         e.preventDefault();
-        document.getElementById("ask")?.scrollIntoView();
+
+        document
+          .getElementById("ask")
+          ?.scrollIntoView();
+
         focusTimer = setTimeout(
-          () => inputRef.current?.focus({ preventScroll: true }),
+          () =>
+            inputRef.current?.focus({
+              preventScroll: true,
+            }),
           600
         );
       }
     }
+
     window.addEventListener("keydown", onKey);
+
     return () => {
       window.removeEventListener("keydown", onKey);
       clearTimeout(focusTimer);
@@ -180,17 +275,25 @@ export default function AskAI() {
   return (
     <section id="ask" className="pt-[100px] pb-5">
       <div className="wrap">
-        <Reveal className="lb">ask ai</Reveal>
-        <Reveal as="h2" scramble className="font-display sec-title">
+        <Reveal className="lb">
+          ask ai
+        </Reveal>
+
+        <Reveal
+          as="h2"
+          scramble
+          className="font-display sec-title"
+        >
           Interview my portfolio.
         </Reveal>
 
         <Reveal className="grid grid-cols-[0.9fr_1.1fr] items-center gap-[30px] max-[980px]:grid-cols-1">
+          
           <RobotFace bars={bars} />
 
           <div className="flex h-[430px] flex-col border border-ln bg-pn">
             <div className="border-b border-ln px-4 py-3 text-[11px] text-mu">
-              EYOSIYAS-AI · answers come from my CV, pre-written
+              EYOSIYAS-AI · live assistant · answers come from his CV and notes
             </div>
 
             <div
@@ -202,6 +305,7 @@ export default function AskAI() {
                   {m.text}
                 </div>
               ))}
+
               {pending !== null && (
                 <div className="msg a">
                   {pending}
@@ -223,17 +327,23 @@ export default function AskAI() {
               ))}
             </div>
 
-            <form className="flex border-t border-ln" onSubmit={onSubmit}>
+            <form
+              className="flex border-t border-ln"
+              onSubmit={onSubmit}
+            >
               <input
                 ref={inputRef}
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
-                placeholder="Ask about my skills, projects, or availability..."
+                placeholder="Ask about his work, story, vision, or availability..."
                 autoComplete="off"
                 aria-label="Ask a question"
                 className="flex-1 bg-transparent px-4 py-[14px] text-tx outline-none placeholder:text-[#757575]"
               />
-              <button className="bg-cy px-5 font-medium text-[#02121a]">send</button>
+
+              <button className="bg-cy px-5 font-medium text-[#02121a]">
+                send
+              </button>
             </form>
           </div>
         </Reveal>

@@ -55,11 +55,11 @@ export default function TrainingLog() {
         <div className="grid grid-cols-2 items-center gap-10 max-[980px]:grid-cols-1">
           {/* the loss curve draws itself when this block is revealed */}
           <Reveal className="cv">
-            <svg viewBox="0 0 400 240">
-              <path d="M10 20C60 30 80 120 140 150C200 180 260 190 390 206" />
+                        <svg viewBox="0 0 400 240">
+              <path d="M10 206C60 196 80 106 140 76C200 46 260 36 390 20" />
               <text x="10" y="232">epoch 1</text>
               <text x="330" y="232">epoch 4</text>
-              <text x="10" y="12">loss</text>
+              <text x="10" y="12">skill</text>
             </svg>
           </Reveal>
 

@@ -33,13 +33,16 @@ export default function Header() {
 
   return (
     <header className="fixed inset-x-0 top-[env(safe-area-inset-top,0px)] z-50 flex items-center justify-between bg-[rgba(4,6,11,0.72)] px-[30px] py-4 text-[#e9f6ff] backdrop-blur-[10px]">
-      <a
-        href="#home"
-        className="font-display text-[15px] font-bold tracking-[0.04em]"
-      >
-        <i className="not-italic text-[#4de1ff]">EH</i>
-        {"//AI"}
-      </a>
+    <a
+  href="#home"
+  className="flex items-center font-display text-[15px] font-bold tracking-[0.04em]"
+>
+  <img
+    src="/Eyosi_logo.png"
+    alt="Eyosiyas Hailemichael logo"
+    className="h-20 w-20 rounded-full object-cover"
+  />
+</a>
 
       <nav className="flex gap-[26px] text-[12px] max-[980px]:hidden">
         {LINKS.map((link) => (

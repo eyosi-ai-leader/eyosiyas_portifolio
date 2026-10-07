@@ -3,7 +3,7 @@ export const contact = {
   phone: "+251923078426",
   phoneDisplay: "+251 923 078 426",
   telegram: "EHyosi",
-  github: "eyosi4314",
+  github: "eyosi-ai-leader",
   // Placeholder: replace with your real LinkedIn address when you are ready.
-  linkedin: "https://www.linkedin.com/in/your-username",
+  linkedin: "https://www.linkedin.com/in/eyosi-ai-leader",
 };
