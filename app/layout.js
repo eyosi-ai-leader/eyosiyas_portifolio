@@ -17,9 +17,9 @@ const plexMono = IBM_Plex_Mono({
 });
 
 export const metadata = {
-  title: "Eyosiyas Hailemichael — AI-Native Software Engineer",
+  title: "Eyosiyas Hailemichael — Software Developer",
   description:
-    "Portfolio of Eyosiyas Hailemichael: AI-native software engineer, full-stack developer and database architect.",
+    "Portfolio of Eyosiyas Hailemichael: Software Developer, full-stack developer and database architect.",
 };
 
 export const viewport = {
