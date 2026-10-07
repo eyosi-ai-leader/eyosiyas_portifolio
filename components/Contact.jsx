@@ -9,7 +9,6 @@ import {
   FaTelegramPlane,
 } from "react-icons/fa";
 import Reveal from "@/components/Reveal";
-import Toast from "@/components/Toast";
 import { contact } from "@/data/contact";
 
 const INTERESTS = [
@@ -24,29 +23,73 @@ const INTERESTS = [
 const labelCls =
   "mb-[6px] block text-[11px] uppercase tracking-[.14em] text-mu";
 
+/* ---------- the "thank you" popup shown after the form is sent ---------- */
+
+function ThankYouModal({ onClose }) {
+  const closeRef = useRef(null);
+
+  useEffect(() => {
+    // focus the button, close with the Escape key, and stop the page behind from scrolling
+    closeRef.current?.focus();
+
+    function onKey(e) {
+      if (e.key === "Escape") onClose();
+    }
+    window.addEventListener("keydown", onKey);
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [onClose]);
+
+  return (
+    <div
+      className="fixed inset-0 z-[90] grid place-items-center bg-[rgba(2,6,12,0.72)] p-5 backdrop-blur-[6px]"
+      onClick={onClose}
+    >
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="thanks-title"
+        onClick={(e) => e.stopPropagation()}
+        className="w-full max-w-[440px] border border-cy bg-bg2 p-8 text-center shadow-[0_0_60px_color-mix(in_srgb,var(--cy)_25%,transparent)]"
+      >
+        <small className="text-[11.67px] text-or">MESSAGE · sent</small>
+
+        <h3
+          id="thanks-title"
+          className="mt-[10px] mb-3 font-display text-[length:clamp(22px,3vw,30px)] leading-[1.15] font-bold"
+        >
+          Thank you!
+        </h3>
+
+        <p className="mb-6 leading-[1.8] text-mu">
+          Your message has been sent. We will get in touch with you within 24
+          hours.
+        </p>
+
+        <button
+          ref={closeRef}
+          type="button"
+          data-cur="CLOSE"
+          onClick={onClose}
+          className="btn btn-p"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function Contact() {
-  const [toast, setToast] = useState({ show: false, text: "" });
-  const [status, setStatus] = useState("idle"); // idle | sending | sent | error
+  const [status, setStatus] = useState("idle"); // idle | sending | error
   const [errorText, setErrorText] = useState("");
-  const timer = useRef(null);
-
-  useEffect(() => () => clearTimeout(timer.current), []);
-
-  function showToast(text) {
-    setToast({ show: true, text });
-    clearTimeout(timer.current);
-    timer.current = setTimeout(
-      () => setToast((t) => ({ ...t, show: false })),
-      1800
-    );
-  }
-
-  // clicking the email copies it and shows "Email copied"
-  function copyEmail(e) {
-    e.preventDefault();
-    navigator.clipboard?.writeText(contact.email).catch(() => {});
-    showToast("Email copied");
-  }
+  const [thanks, setThanks] = useState(false); // show the popup?
 
   // sends the form to /api/contact, which emails it to you
   async function handleSubmit(e) {
@@ -68,8 +111,8 @@ export default function Contact() {
 
       if (res.ok) {
         form.reset();
-        setStatus("sent");
-        showToast("Message sent");
+        setStatus("idle");
+        setThanks(true); // open the thank-you popup
         return;
       }
 
@@ -95,10 +138,10 @@ export default function Contact() {
     {
       label: "email",
       value: contact.email,
-      href: "#",
+      href: `mailto:${contact.email}`, // opens the visitor's email app in a new tab
       Icon: FaEnvelope,
-      cur: "COPY",
-      onClick: copyEmail,
+      cur: "EMAIL",
+      external: true,
     },
     {
       label: "phone",
@@ -149,11 +192,10 @@ export default function Contact() {
               </p>
 
               <div className="flex flex-col gap-[10px]">
-                {links.map(({ label, value, href, Icon, cur, onClick, external }) => (
+                {links.map(({ label, value, href, Icon, cur, external }) => (
                   <a
                     key={label}
                     href={href}
-                    onClick={onClick}
                     data-cur={cur}
                     {...(external ? { target: "_blank", rel: "noreferrer" } : {})}
                     className="dep-btn flex items-center gap-[14px]"
@@ -176,7 +218,6 @@ export default function Contact() {
             </div>
 
             <form onSubmit={handleSubmit}>
-
               <label className={labelCls} htmlFor="c-name">
                 Full Name *
               </label>
@@ -271,11 +312,6 @@ export default function Contact() {
                 {status === "sending" ? "Sending..." : "Send message"}
               </button>
 
-              {status === "sent" && (
-                <p className="mt-[12px] text-[13px] text-cy" role="status">
-                  Thank you! Your message was sent. I will reply soon.
-                </p>
-              )}
               {status === "error" && (
                 <p className="mt-[12px] text-[13px] text-or" role="alert">
                   {errorText}
@@ -286,7 +322,7 @@ export default function Contact() {
         </div>
       </section>
 
-      <Toast show={toast.show}>{toast.text}</Toast>
+      {thanks && <ThankYouModal onClose={() => setThanks(false)} />}
     </>
   );
 }

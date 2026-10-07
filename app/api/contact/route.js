@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer";
-
+export const maxDuration = 30;
 const RATE_WINDOW_MS = 10 * 60 * 1000;
 const RATE_MAX = 5;
 const hits = new Map();

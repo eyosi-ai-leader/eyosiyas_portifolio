@@ -1,5 +1,5 @@
 import { knowledgeBase } from "@/data/knowledge-base";
-
+export const maxDuration = 30;
 const API_URL =
   process.env.OPENROUTER_API_URL ||
   "https://openrouter.ai/api/v1/chat/completions";
