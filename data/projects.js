@@ -1,5 +1,6 @@
 // The 4 deployments shown in the "Systems I've shipped" section.
 // url = live website link (leave it out if the project is not deployed).
+// status = "live", "in development", or "not deployed yet".
 export const projects = [
   {
     id: "DEP-01",
@@ -19,18 +20,17 @@ export const projects = [
   },
   {
     id: "DEP-02",
-    title: "AI-Powered Church Management System",
+    title: "AI-Powered Church Management Platform",
     description:
-      "One system for members, ministries, events, and finances, with clear permissions for each role.",
+      "A complete platform for church life: a public website, member accounts with email verification and Google sign-in, role-based access for admins, pastors, and ministry leaders, announcements with live notifications and email, prayer requests, and an AI assistant.",
     status: "not deployed yet",
-    // url: "https://arutechclub.netlify.app/",
-    nodes: ["React UI", "Node API", "MySQL", "AI assist"],
-    tags: ["React", "Node.js", "MySQL", "AI"],
+    nodes: ["Next.js UI", "Express API", "MySQL", "Church AI"],
+    tags: ["Next.js", "Node.js", "Express", "MySQL", "Tailwind", "AI"],
     logs: [
-      "members indexed",
-      "ministries linked",
-      "finance module ready",
-      "assistant online",
+      "email verification active",
+      "role-based access enabled",
+      "announcements and notifications live",
+      "church AI assistant online",
     ],
   },
   {
@@ -51,13 +51,17 @@ export const projects = [
   },
   {
     id: "DEP-04",
-    title: "Netflix Clone",
+    title: "FinTrack: Personal Finance Tracker",
     description:
-      "A streaming interface with reusable components and careful responsive design.",
-    status: "live",
-    url: "https://nettflixclone.netlify.app/",
-    nodes: ["React", "Components", "CSS"],
-    tags: ["React", "CSS"],
-    logs: ["components built", "layouts responsive", "build passing"],
+      "A fintech platform built as Spring Boot microservices: separate services for users, income, expenses, budgets, and reporting, connected through an API gateway.",
+    status: "in development",
+    nodes: ["Client UI", "API Gateway", "Spring Boot", "MySQL"],
+    tags: ["Java", "Spring Boot", "Spring Data JPA", "MySQL", "Microservices", "REST"],
+    logs: [
+      "user service ready",
+      "income and expense services linked",
+      "budget service tracking limits",
+      "reporting service online",
+    ],
   },
 ];
