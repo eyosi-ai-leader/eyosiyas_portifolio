@@ -1,7 +1,7 @@
 import Reveal from "@/components/Reveal";
 
 // Put your CV in the public folder and set its path here.
-const CV_FILE = "/Eyosiyas_Hailemichael_CV.pdf";
+const CV_FILE = "/EYOSIYAS_HAILEMICHAEL__Updated_CV.pdf";
 
 const FACTS = [
   ["role", "Information Systems graduate · Full-Stack Web Developer"],
@@ -23,7 +23,7 @@ export default function CvDownload() {
           <div>
             <small className="text-[11.67px] text-or">CV-01 · pdf</small>
             <h3 className="my-[6px] mb-[10px] font-display text-[length:clamp(20px,2.5vw,30px)] leading-[1.15] font-bold">
-              Eyosiyas Hailemichael Tesema
+              EYOSIYAS HAILÉMICHAEL TESEMA
             </h3>
 
             <div className="dep-log">
@@ -40,7 +40,7 @@ export default function CvDownload() {
               className="btn btn-p text-center"
               data-cur="SAVE"
               href={CV_FILE}
-              download="Eyosiyas_Hailemichael_CV.pdf"
+              download="EYOSIYAS_HAILEMICHAEL__Updated_CV.pdf"
             >
               Download CV (PDF)
             </a>
